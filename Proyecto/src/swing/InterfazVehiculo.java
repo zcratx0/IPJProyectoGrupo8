@@ -15,6 +15,8 @@ import clases.Avion;
 import clases.Barco;
 import clases.ListaPersonaHandler;
 import clases.Vehiculo;
+import componentes.BFAppBar;
+import componentes.BFInterfaz;
 import validadores.Msg;
 import validadores.ValidarIngresos;
 
@@ -28,6 +30,7 @@ import javax.swing.SpinnerDateModel;
 import java.util.Date;
 import java.util.Calendar;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.border.MatteBorder;
@@ -40,7 +43,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-public class InterfazVehiculo extends JFrame {
+public class InterfazVehiculo extends BFInterfaz {
 	private JPanel contentPane;
 	private JTextField nombreTextField;
 	private JTextField colorTextField;
@@ -57,9 +60,6 @@ public class InterfazVehiculo extends JFrame {
 	public InterfazVehiculo(ListaPersonaHandler handler, int idDueño, InterfazPersona parent) {
 		this.idDueño = idDueño;
 		this.parent = parent;
-		System.out.println(idDueño);
-		setUndecorated(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.handler = handler;
 		//	Para simplificar el ajuste más adelante, aquí vamos a definir todo lo que sea texto
 		String textID = "ID";
@@ -154,26 +154,10 @@ public class InterfazVehiculo extends JFrame {
 		lblNewLabel.setBounds(712, 61, 100, 100);
 		contentPane.add(lblNewLabel);
 		
-		JPanel panel = new JPanel();
-		panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-		panel.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				//	Movemos la ventana usando las coordenadas almacenadas
-				setLocation(e.getXOnScreen()-xPos, e.getYOnScreen()-yPos);
-			}
-		});
-		panel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				//	Almacenamos las coordenadas donde dimos click
-				xPos = e.getX();
-				yPos = e.getY();
-			}
-		});
-		panel.setBackground(new Color(72, 72, 72));
-		panel.setBounds(0, 0, 830, 50);
-		contentPane.add(panel);
+		
+		//	App bar para mover la ventana
+		Component appBar = new BFAppBar("Editar Vehiculos");
+		contentPane.add(appBar);
 
 		JLabel tipoLabel = new JLabel("Tipo Vehículo");
 		tipoLabel.setForeground(Color.BLACK);

@@ -7,8 +7,14 @@ import javax.swing.border.EmptyBorder;
 import clases.ExportExcel;
 import clases.ListaPersonaHandler;
 import clases.Persona;
+import componentes.BFAppBar;
+import componentes.BFButton;
+import componentes.BFInterfaz;
+import componentes.BFLabel;
 
 import java.awt.List;
+import java.awt.Rectangle;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -19,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 
 import javax.swing.JLabel;
@@ -26,7 +33,7 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-public class InterfazPrincipal extends JFrame {
+public class InterfazPrincipal extends BFInterfaz {
 
 	private JPanel contentPane;
 	private List listaDePersonasList;
@@ -41,18 +48,121 @@ public class InterfazPrincipal extends JFrame {
 	private JLabel lblNewLabel_3;
 	private JMenuItem mntmNewMenuItem_1;
 	public InterfazPrincipal(ListaPersonaHandler handler) {
-		setTitle("Gestion de Personas");
-		setBackground(Color.WHITE);
-		this.handler = handler;
-		this.personaFrame = new InterfazPersona(handler, this);
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 894, 645);
+		String textDarDeAlta = "Dar de alta";
+		String textDarDeBaja = "Dar de baja";
+				
+		this.handler = handler;
+		this.personaFrame = new InterfazPersona(handler, this);		
+		this.listaDePersonasList = new List();
+		listaDePersonasList.setFont(new Font("Dialog", Font.PLAIN, 20));
+		this.listaDePersonasList.setBounds(10, 195, 231, 335);
+		getContentPane().add(this.listaDePersonasList);
+		
+		this.listaDeAltaList= new List();
+		listaDeAltaList.setFont(new Font("Dialog", Font.PLAIN, 20));
+		listaDeAltaList.setBounds(298, 195, 222, 335);
+		add(listaDeAltaList);
+		
+		//	Dar de alta
+		BFButton btnDarDeAlta = new BFButton(textDarDeAlta, new Rectangle(10, 536, 231, 42));
+		btnDarDeAlta.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (listaDePersonasList.getSelectedItem() != null) {
+					String id = listaDePersonasList.getSelectedItem();
+					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));
+					handler.darPersonaDeAlta(handler.listaDePersonas.get(idByte));
+					actualizarListaDeAlta();
+				}
+			}
+		});
+		
+		getContentPane().add(btnDarDeAlta);
+		//	Dar de baja
+		BFButton btnDarDeBaja = new BFButton(textDarDeBaja, new Rectangle(298, 536, 222, 42));
+		btnDarDeBaja.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				//	Primero vemos si lo que tenemos seleccionado es una Persona
+				if (listaDeAltaList.getSelectedItem() != null) {
+					String id = listaDeAltaList.getSelectedItem();	//	Luego scamos toString asociado
+					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));	//	Luego buscamos cual es la id
+					handler.sacarPersonaDeAlta(handler.listaDePersonas.get(idByte));	//	Finalmente la sacamos de la lista
+					actualizarListaDeAlta();	// Recaramos la lista
+				}
+			}
+		});
+		getContentPane().add(btnDarDeBaja);
+		
+		JLabel lblIcon = new JLabel("");
+		ImageIcon bigIcon = new ImageIcon(InterfazPrincipal.class.getResource("/resource/logo.png"));
+		lblIcon.setIcon(new ImageIcon(InterfazPrincipal.class.getResource("/resource/icon300x300.png")));
+		lblIcon.setBounds(526, 92, 300, 335);
+		getContentPane().add(lblIcon);
+		
+		BFLabel lblListaPersonas = new BFLabel("Lista de personas", new Rectangle(10, 101, 231, 88));
+		lblListaPersonas.setForeground(Color.WHITE);
+		lblListaPersonas.setFont(new Font("Tahoma", Font.PLAIN, 29));
+		getContentPane().add(lblListaPersonas);
+		
+		BFLabel lblListaDadasDeAlta= new BFLabel("Dadas de alta", new Rectangle(298, 101, 231, 88));
+		lblListaDadasDeAlta.setFont(new Font("Tahoma", Font.PLAIN, 29));
+		lblListaDadasDeAlta.setForeground(Color.WHITE);
+		getContentPane().add(lblListaDadasDeAlta);
+		
+		barraDeBusquedaTextField = new JTextField();
+		barraDeBusquedaTextField.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		barraDeBusquedaTextField.setBounds(554, 489, 257, 36);
+		getContentPane().add(barraDeBusquedaTextField);
+		barraDeBusquedaTextField.setColumns(10);
+		
+		
+		
+		//	Boton de Buscar
+		BFButton searchButton = new BFButton("BUSCAR", new Rectangle(554, 536, 222, 42));
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		searchButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//	Si la barra de busqueda sin espacio no esta vacia buscar valores
+				if (barraDeBusquedaTextField.getText().strip() != "") {
+					listaDePersonasList.removeAll();
+					for (Persona p : handler.listaDePersonas) {
+						if (p != null) {
+							if (p.getNombre().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase()) || p.getApellido().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase())) {
+								listaDePersonasList.add(p.toString());
+							}
+						}
+					}
+				} else {
+					actualizarLista();
+				}
+			}
+		});
+		getContentPane().add(searchButton);
+		
+		BFLabel lblBuscar= new BFLabel("Buscar", new Rectangle(554, 397, 173, 88));
+		lblBuscar.setFont(new Font("Tahoma", Font.PLAIN, 29));
+		lblBuscar.setForeground(Color.WHITE);
+		getContentPane().add(lblBuscar);
+		
+		//	App bar para mover la ventana
+		Component appBar = new BFAppBar("Gestion de Personas");
+		appBar.setLocation(0, 0);
+		getContentPane().add(appBar);
 		
 		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		menuBar.setForeground(Color.WHITE);
+		menuBar.setBackground(Color.WHITE);
+		menuBar.setBorderPainted(false);
+		menuBar.setBounds(0, 49, 870, 42);
+		getContentPane().add(menuBar);
 		
 		mnExportarCsv = new JMenu("Menu");
+		mnExportarCsv.setBackground(Color.LIGHT_GRAY);
 		menuBar.add(mnExportarCsv);
 		
 		mntmNewMenuItem = new JMenuItem("Editar Persona");
@@ -90,159 +200,6 @@ public class InterfazPrincipal extends JFrame {
 			}
 		});
 		mnExportarCsv.add(mntmNewMenuItem_1);
-		
-		
-		
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(72, 72, 72));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		this.listaDePersonasList = new List();
-		listaDePersonasList.setFont(new Font("Dialog", Font.PLAIN, 20));
-		this.listaDePersonasList.setBounds(43, 100, 231, 335);
-		contentPane.add(this.listaDePersonasList);
-		
-		this.listaDeAltaList= new List();
-		listaDeAltaList.setFont(new Font("Dialog", Font.PLAIN, 20));
-		listaDeAltaList.setBounds(298, 100, 222, 335);
-		contentPane.add(listaDeAltaList);
-		
-		//	Dar de alta
-		JButton btnNewButton = new JButton("Dar de alta");
-		btnNewButton.setForeground(new Color(255, 255, 255));
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setBackground(new Color(143, 188, 143));
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (listaDePersonasList.getSelectedItem() != null) {
-					String id = listaDePersonasList.getSelectedItem();
-					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));
-					handler.darPersonaDeAlta(handler.listaDePersonas.get(idByte));
-					actualizarListaDeAlta();
-				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				e.getComponent().setBackground(new Color(163, 188, 163));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				e.getComponent().setBackground(new Color(143, 188, 143));
-			}
-		});
-		btnNewButton.setBounds(43, 441, 231, 42);
-		contentPane.add(btnNewButton);
-		//	Dar de baja
-		JButton btnNewButton_1 = new JButton("Dar de baja");
-		btnNewButton_1.setForeground(new Color(255, 255, 255));
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton_1.setBackground(new Color(143, 188, 143));
-		btnNewButton_1.setBorderPainted(false);
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				//	Primero vemos si lo que tenemos seleccionado es una Persona
-				if (listaDeAltaList.getSelectedItem() != null) {
-					String id = listaDeAltaList.getSelectedItem();	//	Luego scamos toString asociado
-					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));	//	Luego buscamos cual es la id
-					handler.sacarPersonaDeAlta(handler.listaDePersonas.get(idByte));	//	Finalmente la sacamos de la lista
-					actualizarListaDeAlta();	// Recaramos la lista
-				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				e.getComponent().setBackground(new Color(163, 188, 163));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				e.getComponent().setBackground(new Color(143, 188, 143));
-			}
-		});
-		btnNewButton_1.setBounds(298, 441, 222, 42);
-		contentPane.add(btnNewButton_1);
-		
-		JLabel lblNewLabel = new JLabel("");
-		ImageIcon bigIcon = new ImageIcon(InterfazPrincipal.class.getResource("/resource/logo.png"));
-		lblNewLabel.setIcon(new ImageIcon(InterfazPrincipal.class.getResource("/resource/icon300x300.png")));
-		lblNewLabel.setBounds(505, 0, 306, 346);
-		contentPane.add(lblNewLabel);
-		
-		lblNewLabel_1 = new JLabel("Lista de personas");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setForeground(Color.WHITE);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 29));
-		lblNewLabel_1.setBackground(Color.WHITE);
-		lblNewLabel_1.setBounds(43, 11, 231, 88);
-		contentPane.add(lblNewLabel_1);
-		
-		lblNewLabel_2 = new JLabel("Dadas de alta");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 29));
-		lblNewLabel_2.setBackground(Color.WHITE);
-		lblNewLabel_2.setBounds(289, 11, 231, 88);
-		contentPane.add(lblNewLabel_2);
-		
-		barraDeBusquedaTextField = new JTextField();
-		barraDeBusquedaTextField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		barraDeBusquedaTextField.setBounds(554, 399, 257, 36);
-		contentPane.add(barraDeBusquedaTextField);
-		barraDeBusquedaTextField.setColumns(10);
-		
-		
-		
-		//	Buscar
-		JButton searchButton = new JButton("BUSCAR");
-		searchButton.setForeground(new Color(255, 255, 255));
-		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		searchButton.setBackground(new Color(143, 188, 143));
-		searchButton.setBorderPainted(false);
-		searchButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		searchButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//	Si la barra de busqueda sin espacio no esta vacia buscar valores
-				if (barraDeBusquedaTextField.getText().strip() != "") {
-					listaDePersonasList.removeAll();
-					for (Persona p : handler.listaDePersonas) {
-						if (p != null) {
-							if (p.getNombre().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase()) || p.getApellido().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase())) {
-								listaDePersonasList.add(p.toString());
-							}
-						}
-					}
-				} else {
-					actualizarLista();
-				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				e.getComponent().setBackground(new Color(163, 188, 163));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				e.getComponent().setBackground(new Color(143, 188, 143));
-			}
-			
-		});
-		searchButton.setBounds(554, 446, 222, 42);
-		contentPane.add(searchButton);
-		
-		lblNewLabel_3 = new JLabel("Buscar");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3.setForeground(Color.WHITE);
-		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 29));
-		lblNewLabel_3.setBackground(Color.WHITE);
-		lblNewLabel_3.setBounds(554, 314, 173, 88);
-		contentPane.add(lblNewLabel_3);
-		
 		
 	}
 	
