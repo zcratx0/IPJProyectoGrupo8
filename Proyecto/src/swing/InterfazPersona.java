@@ -1,58 +1,39 @@
 package swing;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import clases.ListaPersonaHandler;
-import clases.Persona;
 import clases.Vehiculo;
-import componentes.BFAppBar;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;
-import componentes.BFLabelX;
 import componentes.BFTextField;
 import validadores.Msg;
 import validadores.ValidarIngresos;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import javax.swing.ImageIcon;
-import javax.swing.border.MatteBorder;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.SwingConstants;
-import java.awt.Cursor;
-import javax.swing.JList;
 import java.awt.List;
 import java.awt.Rectangle;
 
 public class InterfazPersona extends BFInterfaz {
-	private JPanel contentPane;
 	public InterfazVehiculo vehiculos;
 	public ListaPersonaHandler handler;	//	Llamado para acceder a la memoria
 	public List vehiculosList; // Lista de vehiculos
 	public int idPersona;
 	
 	public InterfazPersona(ListaPersonaHandler handler, InterfazPrincipal parent) {
-		InterfazPersona personaInterfaz = this;
+		super("Editor de personas");
 		this.handler = handler;
 		
 		//	Para simplificar el ajuste futuros, aquí vamos a definir todo lo que sea texto
@@ -67,39 +48,33 @@ public class InterfazPersona extends BFInterfaz {
 		String textCargar = "Cargar";
 		
 		//	Definimos la ventana
-		setBounds(100, 100, 850, 606);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		getContentPane().setBackground(Color.WHITE);
 
 		//	Todo lo que son labels van aquí
 		BFLabel idLabel = new BFLabel(textID, new Rectangle(21, 482, 35, 28));
-		contentPane.add(idLabel);
+		getContentPane().add(idLabel);
 		//	Label del nombre
 		BFLabel nombreLabel = new BFLabel(textNombre, new Rectangle(10, 41, 103, 38));
-		contentPane.add(nombreLabel);
+		getContentPane().add(nombreLabel);
 		//	Label del apellido
 		BFLabel apellidoLabel = new BFLabel(textApellido, new Rectangle(10, 121, 103, 38));
-		contentPane.add(apellidoLabel);
+		getContentPane().add(apellidoLabel);
 		//	Label de la fecha de nacimiento
 		BFLabel fechaNacimientoLabel = new BFLabel(textFechaNacimiento, new Rectangle(10, 201, 181, 38));
-		contentPane.add(fechaNacimientoLabel);
+		getContentPane().add(fechaNacimientoLabel);
 		//	Label del departamento de residencia
 		BFLabel dptoResidenciaLabel = new BFLabel(textDptResidencia, new Rectangle(10, 281, 236, 38));
-		contentPane.add(dptoResidenciaLabel);
+		getContentPane().add(dptoResidenciaLabel);
 		//	Label de la cantidad de hijos
 		BFLabel cantidadHijosLabel = new BFLabel(textCantidadHijos, new Rectangle(10, 400, 147, 38));
-		contentPane.add(cantidadHijosLabel);
+		getContentPane().add(cantidadHijosLabel);
 		//	Label de agregar Vehiculo
 		BFLabel vehiculosLabel = new BFLabel(textVehiculos, new Rectangle(470, 78, 175, 32));
-		contentPane.add(vehiculosLabel);
+		getContentPane().add(vehiculosLabel);
 		//	Icono del grupo		
 		BFLabel lblNewLabel = new BFLabel("", new Rectangle(709, 61, 103, 119));
 		lblNewLabel.setIcon(new ImageIcon(InterfazPersona.class.getResource("/resource/iconReverso100x100.png")));
-		contentPane.add(lblNewLabel);
+		getContentPane().add(lblNewLabel);
 		
 		
 		
@@ -119,7 +94,7 @@ public class InterfazPersona extends BFInterfaz {
 		add(cantidadHijosSpinner );		
 		JSpinner idSpinner = new JSpinner();
 		idSpinner.setBounds(167, 485, 54, 28);
-		contentPane.add(idSpinner);
+		getContentPane().add(idSpinner);
 	
 		
 		
@@ -134,12 +109,12 @@ public class InterfazPersona extends BFInterfaz {
 			public void mouseClicked(MouseEvent e) {
 				int id = (int) idSpinner.getValue();
 				actualizarIdPersona(id);
-				vehiculos = new InterfazVehiculo(handler, id, personaInterfaz);
+				vehiculos = new InterfazVehiculo(handler, id, InterfazPersona.this);
 				vehiculos.setVisible(true);
 			}
 		});
 		crearVehiculo.setBounds(470, 371, 233, 30);
-		contentPane.add(crearVehiculo);		
+		getContentPane().add(crearVehiculo);		
 
 		//	Lista de vehiculos
 		/*	La lista de vehiculos es parte de la propia clase IntergazPersonas
@@ -148,11 +123,8 @@ public class InterfazPersona extends BFInterfaz {
 		 */
 		this.vehiculosList = new List();
 		vehiculosList.setBounds(470, 121, 233, 244);
-		contentPane.add(vehiculosList);
+		getContentPane().add(vehiculosList);
 		
-		//	App bar para mover la ventana
-		Component appBar = new BFAppBar("Editar Personas");
-		contentPane.add(appBar);
 		
 
 		//	Boton para guardar la persona		
@@ -177,7 +149,6 @@ public class InterfazPersona extends BFInterfaz {
 					cantidadHijosSpinner.setValue(0);
 					vehiculosList.removeAll();
 					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
-					
 				}
 			}
 		});

@@ -1,13 +1,9 @@
 package swing;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import clases.ExportExcel;
 import clases.ListaPersonaHandler;
 import clases.Persona;
-import componentes.BFAppBar;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;
@@ -16,7 +12,6 @@ import java.awt.List;
 import java.awt.Rectangle;
 
 import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
@@ -25,21 +20,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Image;
-
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
-import javax.swing.SwingConstants;
 
 public class InterfazPrincipal extends BFInterfaz {
-
 	private JPanel contentPane;
 	private List listaDePersonasList;
 	private List listaDeAltaList;
 	public ListaPersonaHandler handler;
-	private InterfazPersona personaFrame;
 	private JMenu mnExportarCsv;
 	private JMenuItem mntmNewMenuItem;
 	private JLabel lblNewLabel_1;
@@ -47,13 +36,14 @@ public class InterfazPrincipal extends BFInterfaz {
 	private JTextField barraDeBusquedaTextField;
 	private JLabel lblNewLabel_3;
 	private JMenuItem mntmNewMenuItem_1;
+	
+	
 	public InterfazPrincipal(ListaPersonaHandler handler) {
-		
+		super("Gestion de personas");
 		String textDarDeAlta = "Dar de alta";
 		String textDarDeBaja = "Dar de baja";
 				
 		this.handler = handler;
-		this.personaFrame = new InterfazPersona(handler, this);		
 		this.listaDePersonasList = new List();
 		listaDePersonasList.setFont(new Font("Dialog", Font.PLAIN, 20));
 		this.listaDePersonasList.setBounds(10, 195, 231, 335);
@@ -149,10 +139,7 @@ public class InterfazPrincipal extends BFInterfaz {
 		lblBuscar.setForeground(Color.WHITE);
 		getContentPane().add(lblBuscar);
 		
-		//	App bar para mover la ventana
-		Component appBar = new BFAppBar("Gestion de Personas");
-		appBar.setLocation(0, 0);
-		getContentPane().add(appBar);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setForeground(Color.WHITE);
@@ -166,17 +153,12 @@ public class InterfazPrincipal extends BFInterfaz {
 		menuBar.add(mnExportarCsv);
 		
 		mntmNewMenuItem = new JMenuItem("Editar Persona");
-		mntmNewMenuItem.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-		});
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				personaFrame.setVisible(true);
+				new InterfazPersona(handler, InterfazPrincipal.this).setVisible(true);;
 			}
 		});
 		

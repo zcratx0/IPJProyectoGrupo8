@@ -28,6 +28,21 @@ public class BFTextField extends JTextField{
 			}
 		});
 	}
+	//	En caso de que sea para ingresar numeros
+	public BFTextField(Rectangle bounds, int tipo) {
+		super();
+		setBorder(new MatteBorder(0, 0, 1, 0, (Color) new Color(0, 0, 0)));
+		setFont(new Font("Tahoma", Font.PLAIN, 16));
+		setBounds(bounds);
+		setColumns(10);
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				ValidarIngresos.ValidarNumeros(e);
+			}
+		});
+	}
+	
 	
 	//	En caso de Fecha
 	public BFTextField(Rectangle bounds, String tipo) {

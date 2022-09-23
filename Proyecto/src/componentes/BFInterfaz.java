@@ -11,7 +11,8 @@ import swing.InterfazPersona;
 public class BFInterfaz extends JFrame {
 	private JPanel panel;
 	
-	public BFInterfaz() {
+	public BFInterfaz(String title) {
+		setTitle(title);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.panel = new JPanel();
@@ -20,6 +21,11 @@ public class BFInterfaz extends JFrame {
 		this.panel.setLayout(null);
 		setBounds(100, 100, 850, 645);
 		setContentPane(this.panel);
+		//		App bar para mover la ventana
+		Component appBar = new BFAppBar(getTitle());
+		appBar.setLocation(0, 0);
+		getContentPane().add(appBar);
+		System.out.println("Intefaz " + getTitle() + " creada!");
 		
 	}
 
