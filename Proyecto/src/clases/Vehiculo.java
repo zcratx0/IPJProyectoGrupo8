@@ -2,14 +2,14 @@ package clases;
 
 public class Vehiculo {
 		private int idVehiculo;
-		private String nomVehiculo;
+		private String nombreVehiculo;
 		private String colorVehiculo;
 		private int idDueño;
 		//constructor 
 		public Vehiculo(int idVehiculo, String nomVehiculo, String colorVehiculo, int idDueño) {
 			super();
 			this.idVehiculo = idVehiculo;
-			this.nomVehiculo = nomVehiculo;
+			this.nombreVehiculo = nomVehiculo;
 			this.colorVehiculo = colorVehiculo;
 			this.idDueño = idDueño;
 		}
@@ -24,12 +24,12 @@ public class Vehiculo {
 			this.idVehiculo = idVehiculo;
 		}
 
-		public String getNomVehiculo() {
-			return nomVehiculo;
+		public String getNombreVehiculo() {
+			return nombreVehiculo;
 		}
 
-		public void setNomVehiculo(String nomVehiculo) {
-			this.nomVehiculo = nomVehiculo;
+		public void setNombreVehiculo(String nomVehiculo) {
+			this.nombreVehiculo = nomVehiculo;
 		}
 
 		public String getColorVehiculo() {
@@ -43,7 +43,7 @@ public class Vehiculo {
 		//toString
 		@Override
 		public String toString() {
-			return "Vehiculo [idVehiculo=" + idVehiculo + ", nomVehiculo=" + nomVehiculo + ", colorVehiculo="
+			return "Vehiculo [idVehiculo=" + idVehiculo + ", nomVehiculo=" + nombreVehiculo + ", colorVehiculo="
 					+ colorVehiculo + "]";
 		}
 

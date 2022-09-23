@@ -38,6 +38,6 @@ public class Barco extends Vehiculo{
 		//toString
 		@Override
 		public String toString() {
-			return "Barco [eslora=" + eslora + ", manga=" + manga + "]";
+			return "id "+ getIdVehiculo() + " Barco [eslora=" + eslora + ", manga=" + manga + "]";
 		}	
 }

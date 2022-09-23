@@ -9,10 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import clases.ListaPersonaHandler;
+import clases.Persona;
 import clases.Vehiculo;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;
+import componentes.BFSpinner;
 import componentes.BFTextField;
 import validadores.Msg;
 import validadores.ValidarIngresos;
@@ -27,6 +29,7 @@ import java.awt.List;
 import java.awt.Rectangle;
 
 public class InterfazPersona extends BFInterfaz {
+	public InterfazPrincipal parent;
 	public InterfazVehiculo vehiculos;
 	public ListaPersonaHandler handler;	//	Llamado para acceder a la memoria
 	public List vehiculosList; // Lista de vehiculos
@@ -35,6 +38,7 @@ public class InterfazPersona extends BFInterfaz {
 	public InterfazPersona(ListaPersonaHandler handler, InterfazPrincipal parent) {
 		super("Editor de personas");
 		this.handler = handler;
+		this.parent = parent;
 		
 		//	Para simplificar el ajuste futuros, aquí vamos a definir todo lo que sea texto
 		String textID = "ID";
@@ -88,12 +92,10 @@ public class InterfazPersona extends BFInterfaz {
 		BFTextField dptoResidenciaTextField = new BFTextField(new Rectangle(10, 330, 362, 20));
 		add(dptoResidenciaTextField);
 		
-		JSpinner cantidadHijosSpinner = new JSpinner();
-		cantidadHijosSpinner.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
-		cantidadHijosSpinner.setBounds(167, 407, 54, 31);
-		add(cantidadHijosSpinner );		
-		JSpinner idSpinner = new JSpinner();
-		idSpinner.setBounds(167, 485, 54, 28);
+		
+		BFSpinner cantidadHijosSpinner = new BFSpinner(new Rectangle(167, 407, 54, 31));
+		getContentPane().add(cantidadHijosSpinner);		
+		BFSpinner idSpinner = new BFSpinner(new Rectangle(167, 485, 54, 28));
 		getContentPane().add(idSpinner);
 	
 		
@@ -132,15 +134,19 @@ public class InterfazPersona extends BFInterfaz {
 		saveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (nombreTextField.getText().strip() == "" ) {Msg.MostrarError("Campo sin valor");}
+				//	Si estamos en modo debug, ignomeros todas las medidas contra errores y creemos una persona de prueba
+				if (parent.isDebug()) {
+					handler.crearPersona((byte) ((int) idSpinner.getValue()), "Nombre de prueba", "Apellido de prueba",LocalDate.parse("1998-10-28"),(byte) 0, "Cerro Largo");
+					vehiculosList.removeAll();
+					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
+				}
+				else if (nombreTextField.getText().strip() == "" ) {Msg.MostrarError("Campo sin valor");}
 				else if (apellidoTextField.getText().strip() == "" ) {Msg.MostrarError("Campo vacio: Apellido");}
 				else if (dptoResidenciaTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Departamento de residencia");}
 				else if (fechaNacimientoTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Fecha de nacimiento");}
 				else if (!ValidarIngresos.ValidarFecha("Fecha Nacimiento", fechaNacimientoTextField.getText())) {return;} 
 				else {
 					handler.crearPersona((byte) ((int) idSpinner.getValue()), nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), dptoResidenciaTextField.getText());
-					handler.actualizarVehiculos();
-					parent.actualizarLista();
 					idSpinner.setValue(0);
 					nombreTextField.setText("");
 					apellidoTextField.setText("");
@@ -150,6 +156,8 @@ public class InterfazPersona extends BFInterfaz {
 					vehiculosList.removeAll();
 					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
 				}
+				parent.getListaDePersonasList().actualizarLista();
+				parent.getListaDeAltaList().actualizarListaDeAlta();
 			}
 		});
 		add(saveButton);
@@ -161,13 +169,16 @@ public class InterfazPersona extends BFInterfaz {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int id = (int) idSpinner.getValue();
-				if (handler.listaDePersonas.get(id) == null) {Msg.MostrarError("No existe persona con esa ID");}	//	Si no existe la persona matar el programa
+				actualizarIdPersona(id);	//	Actualizamos el id del dueño
+				if (handler.listaDePersonas.size() <= 0) {Msg.MostrarError("¡Aun no existen personas!");}
+				else if (handler.buscarIDPersona(id) < 0) {Msg.MostrarError("No existe persona con esa ID");}	//	Si no existe la persona matar el programa
 				else {
-					nombreTextField.setText(handler.listaDePersonas.get(id).getNombre());
-					apellidoTextField.setText(handler.listaDePersonas.get(id).getApellido());
-					fechaNacimientoTextField.setText(handler.listaDePersonas.get(id).getFechaNacimiento().toString());
-					dptoResidenciaTextField.setText(handler.listaDePersonas.get(id).getDptoResidencia());
-					cantidadHijosSpinner.setValue((int) handler.listaDePersonas.get(id).getCantHijos());
+					Persona p = handler.listaDePersonas.get(handler.buscarIDPersona(id));
+					nombreTextField.setText(p.getNombre());
+					apellidoTextField.setText(p.getApellido());
+					fechaNacimientoTextField.setText(p.getFechaNacimiento().toString());
+					dptoResidenciaTextField.setText(p.getDptoResidencia());
+					cantidadHijosSpinner.setValue((int) p.getCantHijos());
 					actualizarListaVehiculos();
 					JOptionPane.showMessageDialog(null,"¡Datos cargados!");
 				}
@@ -175,11 +186,12 @@ public class InterfazPersona extends BFInterfaz {
 		});
 		add(loadButton);
 		
-	}
+	}	
 	public void actualizarListaVehiculos() {
 		this.vehiculosList.removeAll();
-		for (Vehiculo v : handler.listaDeVehiculos) {
+		for (Vehiculo v : handler.listaDeVehiculos) {	//	Por cada vehiculo que comprata la id de la persona
 			if (v.getIdDueño() == idPersona) {
+				System.out.println(v.getIdDueño() + " " + idPersona);
 				this.vehiculosList.add(v.toString());
 			}
 		}

@@ -7,6 +7,9 @@ import clases.Persona;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;
+import componentes.BFList;
+import componentes.BFTextField;
+import validadores.Msg;
 
 import java.awt.List;
 import java.awt.Rectangle;
@@ -14,28 +17,26 @@ import java.awt.Rectangle;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.EventListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+
 import java.awt.Font;
 
-public class InterfazPrincipal extends BFInterfaz {
-	private JPanel contentPane;
-	private List listaDePersonasList;
-	private List listaDeAltaList;
+public class InterfazPrincipal extends BFInterfaz{
+	private BFList listaDePersonasList;
+	private BFList listaDeAltaList;
 	public ListaPersonaHandler handler;
-	private JMenu mnExportarCsv;
-	private JMenuItem mntmNewMenuItem;
-	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
-	private JTextField barraDeBusquedaTextField;
-	private JLabel lblNewLabel_3;
-	private JMenuItem mntmNewMenuItem_1;
+	private boolean Debug;
 	
 	
 	public InterfazPrincipal(ListaPersonaHandler handler) {
@@ -44,26 +45,31 @@ public class InterfazPrincipal extends BFInterfaz {
 		String textDarDeBaja = "Dar de baja";
 				
 		this.handler = handler;
-		this.listaDePersonasList = new List();
-		listaDePersonasList.setFont(new Font("Dialog", Font.PLAIN, 20));
-		this.listaDePersonasList.setBounds(10, 195, 231, 335);
-		getContentPane().add(this.listaDePersonasList);
 		
-		this.listaDeAltaList= new List();
-		listaDeAltaList.setFont(new Font("Dialog", Font.PLAIN, 20));
-		listaDeAltaList.setBounds(298, 195, 222, 335);
-		add(listaDeAltaList);
+		
+		//	Lista de personas 
+		this.listaDePersonasList = new BFList(handler.listaDePersonas, new Rectangle(10, 195, 231, 335), 0);
+		getContentPane().add(this.listaDePersonasList);
+		this.listaDeAltaList= new BFList(handler.dadoDeAlta, new Rectangle(298, 195, 222, 335), 1);
+		getContentPane().add(this.listaDeAltaList);
 		
 		//	Dar de alta
 		BFButton btnDarDeAlta = new BFButton(textDarDeAlta, new Rectangle(10, 536, 231, 42));
+		btnDarDeAlta.addActionListener(listaDeAltaList);
 		btnDarDeAlta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (listaDePersonasList.getSelectedItem() != null) {
 					String id = listaDePersonasList.getSelectedItem();
 					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));
-					handler.darPersonaDeAlta(handler.listaDePersonas.get(idByte));
-					actualizarListaDeAlta();
+					if (handler.darPersonaDeAlta(handler.listaDePersonas.get(handler.buscarIDPersona(idByte)))) {
+						listaDeAltaList.actualizarListaDeAlta();
+						JOptionPane.showMessageDialog(null,"¡Persona dada de alta!");
+					} else {
+						Msg.MostrarError("¡Hubo un error!");
+					}
+				} else {
+					Msg.MostrarError("¡No hay persona seleccionada!");
 				}
 			}
 		});
@@ -73,12 +79,21 @@ public class InterfazPrincipal extends BFInterfaz {
 		BFButton btnDarDeBaja = new BFButton(textDarDeBaja, new Rectangle(298, 536, 222, 42));
 		btnDarDeBaja.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				//	Primero vemos si lo que tenemos seleccionado es una Persona
+				//	Primero vemos si lo que tenemos seleccionado es distinto de un campo vacio
 				if (listaDeAltaList.getSelectedItem() != null) {
-					String id = listaDeAltaList.getSelectedItem();	//	Luego scamos toString asociado
-					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));	//	Luego buscamos cual es la id
-					handler.sacarPersonaDeAlta(handler.listaDePersonas.get(idByte));	//	Finalmente la sacamos de la lista
-					actualizarListaDeAlta();	// Recaramos la lista
+					String str = listaDeAltaList.getSelectedItem();	//	Luego scamos toString asociado
+					int idByte = ((int)  Integer.parseInt(str.substring(4, str.indexOf(','))));	//	Luego buscamos cual es la id
+					if (handler.sacarPersonaDeAlta(handler.dadoDeAlta.get(handler.buscarIDPersona(idByte)))) {
+						listaDeAltaList.actualizarListaDeAlta();	//	Actualizamos la lista
+						JOptionPane.showMessageDialog(null,"¡Persona dada de baja!");
+					}
+					else {
+						Msg.MostrarError("¡Hubo un error!");
+					}
+					
+				}
+				else {
+					Msg.MostrarError("¡No hay persona seleccionada!");
 				}
 			}
 		});
@@ -100,11 +115,8 @@ public class InterfazPrincipal extends BFInterfaz {
 		lblListaDadasDeAlta.setForeground(Color.WHITE);
 		getContentPane().add(lblListaDadasDeAlta);
 		
-		barraDeBusquedaTextField = new JTextField();
-		barraDeBusquedaTextField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		barraDeBusquedaTextField.setBounds(554, 489, 257, 36);
+		BFTextField	barraDeBusquedaTextField = new BFTextField(new Rectangle(554, 489, 257, 36));
 		getContentPane().add(barraDeBusquedaTextField);
-		barraDeBusquedaTextField.setColumns(10);
 		
 		
 		
@@ -119,16 +131,16 @@ public class InterfazPrincipal extends BFInterfaz {
 			public void mouseClicked(MouseEvent e) {
 				//	Si la barra de busqueda sin espacio no esta vacia buscar valores
 				if (barraDeBusquedaTextField.getText().strip() != "") {
-					listaDePersonasList.removeAll();
+					listaDePersonasList.removeAll();	//	Borro toda la lista
 					for (Persona p : handler.listaDePersonas) {
-						if (p != null) {
+						if (p != null) {	//	Si la persona no es nulla buscamos en la lista, esto es para evitar un error.	Nota: Esto se hizo antes de la clase de excepciones
 							if (p.getNombre().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase()) || p.getApellido().equalsIgnoreCase(barraDeBusquedaTextField.getText().toLowerCase())) {
 								listaDePersonasList.add(p.toString());
 							}
 						}
 					}
 				} else {
-					actualizarLista();
+					listaDePersonasList.actualizarLista();
 				}
 			}
 		});
@@ -148,58 +160,74 @@ public class InterfazPrincipal extends BFInterfaz {
 		menuBar.setBounds(0, 49, 870, 42);
 		getContentPane().add(menuBar);
 		
-		mnExportarCsv = new JMenu("Menu");
-		mnExportarCsv.setBackground(Color.LIGHT_GRAY);
-		menuBar.add(mnExportarCsv);
+		JMenu mnMenu = new JMenu("Menu");
+		mnMenu.setBackground(Color.LIGHT_GRAY);
+		menuBar.add(mnMenu);
 		
-		mntmNewMenuItem = new JMenuItem("Editar Persona");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
-			
+		JMenuItem mnitemEditarPersona = new JMenuItem("Editar Persona");
+		mnitemEditarPersona.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				new InterfazPersona(handler, InterfazPrincipal.this).setVisible(true);;
 			}
 		});
 		
 		//cree menu excel
-		mnExportarCsv.add(mntmNewMenuItem);
+		mnMenu.add(mnitemEditarPersona);
 		
 		
-		mntmNewMenuItem_1 = new JMenuItem("Exportar .csv");
-		mntmNewMenuItem_1.addMouseListener(new MouseAdapter() {
+		JMenuItem mnitemExportarCSV = new JMenuItem("Exportar .csv");
+		mnitemExportarCSV.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		mnitemExportarCSV.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				ExportExcel.createCSV(handler);
-				System.out.println("hola");
 			}
 		});
-		mnExportarCsv.add(mntmNewMenuItem_1);
+		mnMenu.add(mnitemExportarCSV);
+
+		
+		JCheckBoxMenuItem mnItemDebug = new JCheckBoxMenuItem("Debug");
+		mnMenu.add(mnItemDebug);
+		mnItemDebug.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setDebug(mnItemDebug.getState());
+			}
+		});
+		
 		
 	}
+
 	
-	public void actualizarLista() {
-		this.listaDePersonasList.removeAll();
-		for (Persona p : this.handler.listaDePersonas) {
-			if (p != null) {
-				this.listaDePersonasList.add(p.toString());
-				System.out.println(p);
-			}
-		}
+	
+	
+	//	Getter and Setter
+
+	public boolean isDebug() {
+		return Debug;
 	}
-	public void actualizarListaDeAlta() {
-		this.listaDeAltaList.removeAll();
-		for (Persona p : this.handler.dadoDeAlta) {
-			if (p != null) {
-				this.listaDeAltaList.add(p.toString());
-			}
-		}
+	public void setDebug(boolean debug) {
+		Debug = debug;
 	}
+	
+	public BFList getListaDePersonasList() {
+		return listaDePersonasList;
+	}
+	public void setListaDePersonasList(BFList listaDePersonasList) {
+		this.listaDePersonasList = listaDePersonasList;
+	}
+	public BFList getListaDeAltaList() {
+		return listaDeAltaList;
+	}
+	public void setListaDeAltaList(BFList listaDeAltaList) {
+		this.listaDeAltaList = listaDeAltaList;
+	}
+	
 }

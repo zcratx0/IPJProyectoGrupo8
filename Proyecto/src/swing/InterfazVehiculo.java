@@ -1,56 +1,40 @@
 package swing;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JButton;
 import clases.Avion;
 import clases.Barco;
 import clases.ListaPersonaHandler;
+import clases.Vehiculo;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;
+import componentes.BFSpinner;
 import componentes.BFTextField;
 import validadores.Msg;
-import validadores.ValidarIngresos;
-
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
-import javax.swing.border.MatteBorder;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
 public class InterfazVehiculo extends BFInterfaz {
-	private JTextField nombreTextField;
-	private JTextField colorTextField;
 	public ListaPersonaHandler handler;	//	LLamado para acceder a la memoria
-	public int xPos = 0;	//	Coordenada para mover la ventana
-	public int yPos = 0;	//	Coordenada para mover la ventana
-	private JTextField esloraTextField;
-	private JTextField mangaTextField;
-	private JTextField longitudTextField;
-	private JTextField cantPasajerosTextField;
 	public final int idDueño;
-	private InterfazPersona parent;
-	
 	public InterfazVehiculo(ListaPersonaHandler handler, int idDueño, InterfazPersona parent) {
 		super("Editor de Vehiculos");
 		this.idDueño = idDueño;
-		this.parent = parent;
 		this.handler = handler;
 		getContentPane().setBackground(Color.WHITE);
 		//	Para simplificar el ajuste más adelante, aquí vamos a definir todo lo que sea texto
 		String textIDVehiculo = "ID del Vehículo";
+		String textIDPersona = "ID del Dueño";
 		String textNombreVehiculo = "Nombre del Vehículo";
 		String textColor = "Color";
 		String textTipo = "Tipo Vehículo";
@@ -61,6 +45,8 @@ public class InterfazVehiculo extends BFInterfaz {
 		//	Labels
 		BFLabel idLabel = new BFLabel(textIDVehiculo, new Rectangle(10, 106, 136, 28));
 		getContentPane().add(idLabel);
+		BFLabel idPersonaLabel = new BFLabel(textIDPersona, new Rectangle(idLabel.getX(), idLabel.getY()-(int) (idLabel.getHeight()*1.5), 136, 28));
+		getContentPane().add(idPersonaLabel);
 		BFLabel nombreLabel = new BFLabel(textNombreVehiculo, new Rectangle(10, 158, 179, 38));
 		getContentPane().add(nombreLabel);
 		BFLabel colorLabel = new BFLabel(textColor, new Rectangle(399, 158, 103, 38));
@@ -99,9 +85,14 @@ public class InterfazVehiculo extends BFInterfaz {
 		BFTextField colorTextField = new BFTextField(new Rectangle(399, 207, 280, 20));
 		getContentPane().add(colorTextField);
 		
-		JSpinner idSpinner = new JSpinner();
-		idSpinner.setBounds(156, 109, 54, 28);
+
+		BFSpinner idSpinner = new BFSpinner(new Rectangle(156, 109, 54, 28));
 		getContentPane().add(idSpinner);
+		
+		BFSpinner idPersonaSpinner = new BFSpinner(new Rectangle(idSpinner.getX(), idSpinner.getY()- (int) (idSpinner.getHeight()*1.5), 54, 28));	//	No tenia muchas ganas de hacer calculos
+		idPersonaSpinner.setValue((int) this.idDueño);
+		getContentPane().add(idPersonaSpinner);
+		
 
 		
 		BFTextField esloraTextField = new BFTextField(new Rectangle(10, 371, 362, 20), 0);
@@ -163,7 +154,12 @@ public class InterfazVehiculo extends BFInterfaz {
 		saveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (nombreTextField.getText().strip() == "" ) {
+				if (parent.parent.isDebug()) {
+					Barco barco = new Barco((int) idSpinner.getValue(), "El barquito de las pruebas", "Azul", (double) 2 ,(double) 3, (int) idPersonaSpinner.getValue());
+					handler.crearVehiculos(barco);
+					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
+				}
+				else if (nombreTextField.getText().strip() == "" ) {
 					Msg.MostrarError("Campo vacio: Nombre");}
 				else if (colorTextField.getText().strip() == "" ) {
 					Msg.MostrarError("Campo vacio: Color");}
@@ -176,20 +172,13 @@ public class InterfazVehiculo extends BFInterfaz {
 					Msg.MostrarError("Campo vacio: Longitud");}
 				else if (cantPasajerosTextField.getText().strip() == "" && tipoComboBox.getSelectedItem() == "Avión" ) {
 					Msg.MostrarError("Campo vacio: Cantidad de pasajeros");}
-				
 				else {
 					if(tipoComboBox.getSelectedItem()=="Barco") {
-						Barco barco = new Barco((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Integer.parseInt(esloraTextField.getText()) ,(double) Integer.parseInt(mangaTextField.getText()), idDueño);
+						Barco barco = new Barco((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Double.parseDouble(esloraTextField.getText()) ,(double) Double.parseDouble(mangaTextField.getText()), (int) idPersonaSpinner.getValue());
 						if (handler.crearVehiculos(barco)) {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos guardados!");}
-						else {
-							Msg.MostrarError("Id ya usada");
-						}
 					} if (tipoComboBox.getSelectedItem() == "Avión") {
-						Avion avion = new Avion((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Integer.parseInt(longitudTextField.getText()), Integer.parseInt(cantPasajerosTextField.getText()), idDueño);
+						Avion avion = new Avion((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Double.parseDouble(longitudTextField.getText()), Integer.parseInt(cantPasajerosTextField.getText()), (int) idPersonaSpinner.getValue());
 						if (handler.crearVehiculos(avion)) {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos guardados!");}
-						else {
-							Msg.MostrarError("Id ya usada");
-						}
 					}
 					handler.actualizarVehiculos();
 					parent.actualizarListaVehiculos();
@@ -206,10 +195,24 @@ public class InterfazVehiculo extends BFInterfaz {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int id = (int) idSpinner.getValue();
-				if (false) {Msg.MostrarError("No existe persona con esa ID");}	//	Si no existe la persona matar el programa
+				if (handler.listaDeVehiculos.size() < 0) {Msg.MostrarError("¡No existen vehiculos!");}
+				if ((id = handler.buscadIDVehiculo(id)) <= -1) {Msg.MostrarError("No existe vehiculo con esa ID");} 	//	Si no existe el vehiculo
 				else {
-					nombreTextField.setText("");
-					colorTextField.setText("");
+					Vehiculo v = handler.listaDeVehiculos.get(id);
+					nombreTextField.setText(v.getNombreVehiculo());
+					colorTextField.setText(v.getColorVehiculo());
+					if (v instanceof Barco) {
+						System.out.println("Barco");
+						tipoComboBox.setSelectedItem("Barco");
+						esloraTextField.setText(((Barco) v).getEslora() + "");	//	Dado que no podemos convertir un valor primitivo con toString()
+						mangaTextField.setText(((Barco) v).getManga() + "");
+					}
+					else if (v instanceof Avion) {
+						System.out.println("Avion");
+						tipoComboBox.setSelectedItem("Avión");
+						cantPasajerosTextField.setText(((Avion) v).getCantPasajeros() + "");
+						longitudTextField.setText(((Avion) v).getLongitud() + "");						
+					}
 					JOptionPane.showMessageDialog(null,"¡Datos cargados!");
 				}
 			}

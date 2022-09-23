@@ -101,7 +101,7 @@ public class Persona {
 	//toString
 	@Override
 	public String toString() {
-		return "id: " + this.getIdPersona() + "," + this.getNombre() + this.getApellido() + this.getVehiculo();
+		return "id: " + this.getIdPersona() + ", " + this.getNombre()+ " " + this.getApellido();
 	}
 	
 	
