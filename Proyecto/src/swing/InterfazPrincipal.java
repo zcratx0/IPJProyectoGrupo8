@@ -172,8 +172,17 @@ public class InterfazPrincipal extends BFInterfaz{
 			}
 		});
 		
+		JMenuItem mnitemDashboard = new JMenuItem("Dashboard");
+		mnitemDashboard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new InterfazDashboard(handler, InterfazPrincipal.this).setVisible(true);;
+			}
+		});
+		
 		//cree menu excel
 		mnMenu.add(mnitemEditarPersona);
+		mnMenu.add(mnitemDashboard);
 		
 		
 		JMenuItem mnitemExportarCSV = new JMenuItem("Exportar .csv");
