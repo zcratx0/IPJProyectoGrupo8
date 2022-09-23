@@ -148,23 +148,19 @@ public class InterfazPersona extends BFInterfaz {
 			public void mouseClicked(MouseEvent e) {
 				//	Si estamos en modo debug, ignomeros todas las medidas contra errores y creemos una persona de prueba
 				if (parent.isDebug()) {
-					handler.crearPersona((byte) ((int) idSpinner.getValue()), "Nombre de prueba", "Apellido de prueba",LocalDate.parse("1998-10-28"),(byte) 0, "Cerro Largo");
+					handler.crearPersona((byte) ((int) idSpinner.getValue()), "Nombre de prueba", "Apellido de prueba",LocalDate.parse("1998-10-28"),(byte) 0, deptoResidenciaComboBox.getSelectedItem().toString());
 					vehiculosList.removeAll();
 					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
 				}
 				else if (nombreTextField.getText().strip() == "" ) {Msg.MostrarError("Campo sin valor");}
 				else if (apellidoTextField.getText().strip() == "" ) {Msg.MostrarError("Campo vacio: Apellido");}
-				//Mantuve esto por si era necesario en un futuro, pero es claro que nunca va a ser vacío. @Matías
-				else if (deptoResidenciaComboBox.getSelectedItem().toString().strip() == "") {Msg.MostrarError("Campo vacio: Departamento de residencia");}
 				else if (fechaNacimientoTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Fecha de nacimiento");}
 				else if (!ValidarIngresos.ValidarFecha("Fecha Nacimiento", fechaNacimientoTextField.getText())) {return;} 
 				else {
-					//@Matías, cambié el TextField por el ComboBox
 					handler.crearPersona((byte) ((int) idSpinner.getValue()), nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), deptoResidenciaComboBox.getSelectedItem().toString());
 					idSpinner.setValue(0);
 					nombreTextField.setText("");
 					apellidoTextField.setText("");
-					//dptoResidenciaTextField.setText(""); @Matías, supongo que lo dejo con el valor por defecto
 					fechaNacimientoTextField.setText("");
 					cantidadHijosSpinner.setValue(0);
 					vehiculosList.removeAll();
@@ -191,8 +187,7 @@ public class InterfazPersona extends BFInterfaz {
 					nombreTextField.setText(p.getNombre());
 					apellidoTextField.setText(p.getApellido());
 					fechaNacimientoTextField.setText(p.getFechaNacimiento().toString());
-					//dptoResidenciaTextField.setText(p.getDptoResidencia()); @Matías, no supe como hacer para setear el valor que viene de p
-					
+					deptoResidenciaComboBox.setSelectedItem(p.getDptoResidencia());
 					cantidadHijosSpinner.setValue((int) p.getCantHijos());
 					actualizarListaVehiculos();
 					JOptionPane.showMessageDialog(null,"¡Datos cargados!");
