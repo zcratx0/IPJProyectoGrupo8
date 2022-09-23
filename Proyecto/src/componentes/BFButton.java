@@ -9,8 +9,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 
-import clases.Persona;
-
 public class BFButton extends JButton {
 	public BFButton(String text, Rectangle bounds) {
 		super(text);

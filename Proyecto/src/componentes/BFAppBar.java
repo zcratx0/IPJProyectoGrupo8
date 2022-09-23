@@ -1,7 +1,6 @@
 package componentes;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -10,7 +9,6 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class BFAppBar extends JPanel {

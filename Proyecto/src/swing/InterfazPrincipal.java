@@ -1,6 +1,5 @@
 package swing;
 
-import javax.swing.JPanel;
 import clases.ExportExcel;
 import clases.ListaPersonaHandler;
 import clases.Persona;
@@ -11,13 +10,10 @@ import componentes.BFList;
 import componentes.BFTextField;
 import validadores.Msg;
 
-import java.awt.List;
 import java.awt.Rectangle;
 
-import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.EventListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;

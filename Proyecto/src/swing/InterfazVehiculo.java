@@ -13,7 +13,6 @@ import componentes.BFSpinner;
 import componentes.BFTextField;
 import validadores.Msg;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;

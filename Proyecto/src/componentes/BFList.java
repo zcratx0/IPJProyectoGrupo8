@@ -1,19 +1,13 @@
 package componentes;
 
-import java.awt.Event;
 import java.awt.Font;
 import java.awt.List;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import clases.Persona;
-import clases.Vehiculo;
 public class BFList extends List implements ActionListener{
 	private ArrayList<Persona> handler;
 	private int tipo = 0;

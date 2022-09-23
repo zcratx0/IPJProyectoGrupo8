@@ -6,8 +6,6 @@ import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import swing.InterfazPersona;
-
 public class BFInterfaz extends JFrame {
 	private JPanel panel;
 	
