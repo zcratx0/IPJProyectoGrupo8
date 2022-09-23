@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
@@ -50,6 +51,8 @@ public class InterfazDashboard extends BFInterfaz {
 		this.handler = handler;
 		this.parent = parent; 
 	
+		ArrayList<String> listaTemporal = new ArrayList<>();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panelJpanel = new JPanel();
 		panelJpanel.setLayout(null);
