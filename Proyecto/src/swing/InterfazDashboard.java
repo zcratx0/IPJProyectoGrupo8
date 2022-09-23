@@ -65,10 +65,16 @@ public class InterfazDashboard extends BFInterfaz {
 		getContentPane().add(numeroPersonasJLabel);
 		
 		BFLabel promedioDeVehiculosJLabel = new BFLabel("Promedio de vehículos por persona : ", new Rectangle(10, 134, 318, 33));
+		promedioDeVehiculosJLabel.setLocation(407, 78);
 		getContentPane().add(promedioDeVehiculosJLabel);
 		
 		BFLabel numeroPromedioJLabel = new BFLabel("0", new Rectangle(338, 133, 105, 33));
+		numeroPromedioJLabel.setLocation(735, 77);
 		getContentPane().add(numeroPromedioJLabel);
+		
+		BFLabel vehiculosPorDeptoJLabel = new BFLabel("Vehículos ingresados por departamento", new Rectangle(227, 123, 372, 33));
+		vehiculosPorDeptoJLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+		getContentPane().add(vehiculosPorDeptoJLabel);
 		
 		
 	}
