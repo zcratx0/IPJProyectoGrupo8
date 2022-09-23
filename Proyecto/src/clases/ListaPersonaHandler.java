@@ -3,7 +3,6 @@ package clases;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ListaPersonaHandler {
 	public ArrayList<Persona> listaDePersonas; // Controlar las personas creadas
