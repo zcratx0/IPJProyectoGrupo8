@@ -50,6 +50,27 @@ public class InterfazPrincipal extends BFInterfaz{
 		//	Lista de personas 
 		this.listaDePersonasList = new BFList(handler.listaDePersonas, new Rectangle(10, 195, 231, 335), 0);
 		getContentPane().add(this.listaDePersonasList);
+		
+		this.listaDePersonasList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (listaDePersonasList.getSelectedItem() == null) {}
+				else if (e.getClickCount() >= 2 && e.getButton() == MouseEvent.BUTTON1) {
+					String id = listaDePersonasList.getSelectedItem();
+					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));
+					if ((idByte = handler.buscarIDPersona(idByte)) <= -1) {}
+					else {
+						Persona p = handler.listaDePersonas.get(idByte);
+						InterfazPersona pInterfaz =  new InterfazPersona(handler, InterfazPrincipal.this);
+						pInterfaz.setVisible(true);
+						pInterfaz.cargarPersona(p);
+				}			
+			}
+			}
+		});
+		
+		
+		
 		this.listaDeAltaList= new BFList(handler.dadoDeAlta, new Rectangle(298, 195, 222, 335), 1);
 		getContentPane().add(this.listaDeAltaList);
 		
@@ -62,7 +83,8 @@ public class InterfazPrincipal extends BFInterfaz{
 				if (listaDePersonasList.getSelectedItem() != null) {
 					String id = listaDePersonasList.getSelectedItem();
 					int idByte = ((int)  Integer.parseInt(id.substring(4, id.indexOf(','))));
-					if (handler.darPersonaDeAlta(handler.listaDePersonas.get(handler.buscarIDPersona(idByte)))) {
+					if ((idByte = handler.buscarIDPersona(idByte)) <= -1) {}
+					else if (handler.darPersonaDeAlta(handler.listaDePersonas.get(idByte))) {
 						listaDeAltaList.actualizarListaDeAlta();
 						JOptionPane.showMessageDialog(null,"¡Persona dada de alta!");
 					} else {

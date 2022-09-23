@@ -4,10 +4,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import clases.ListaPersonaHandler;
 import clases.Persona;
 import clases.Vehiculo;
@@ -20,10 +16,7 @@ import validadores.Msg;
 import validadores.ValidarIngresos;
 
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import java.awt.Color;
-import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.List;
 import java.awt.Rectangle;
@@ -34,6 +27,13 @@ public class InterfazPersona extends BFInterfaz {
 	public ListaPersonaHandler handler;	//	Llamado para acceder a la memoria
 	public List vehiculosList; // Lista de vehiculos
 	public int idPersona;
+	
+	private BFSpinner idSpinner;
+	private BFTextField nombreTextField;
+	private BFTextField apellidoTextField;
+	private BFTextField fechaNacimientoTextField;
+	private BFTextField dptoResidenciaTextField;
+	private BFSpinner cantidadHijosSpinner;
 	
 	public InterfazPersona(ListaPersonaHandler handler, InterfazPrincipal parent) {
 		super("Editor de personas");
@@ -76,36 +76,31 @@ public class InterfazPersona extends BFInterfaz {
 		BFLabel vehiculosLabel = new BFLabel(textVehiculos, new Rectangle(470, 78, 175, 32));
 		getContentPane().add(vehiculosLabel);
 		//	Icono del grupo		
-		BFLabel lblNewLabel = new BFLabel("", new Rectangle(709, 61, 103, 119));
-		lblNewLabel.setIcon(new ImageIcon(InterfazPersona.class.getResource("/resource/iconReverso100x100.png")));
-		getContentPane().add(lblNewLabel);
+		BFLabel iconLabel = new BFLabel("", new Rectangle(709, 61, 103, 119));
+		iconLabel.setIcon(new ImageIcon(InterfazPersona.class.getResource("/resource/iconReverso100x100.png")));
+		getContentPane().add(iconLabel);
 		
 		
 		
 		//	Todo lo que son textFields van aquí
-		BFTextField nombreTextField = new BFTextField(new Rectangle(10, 90, 362, 20));
+		this.nombreTextField = new BFTextField(new Rectangle(10, 90, 362, 20));
 		add(nombreTextField);
-		BFTextField apellidoTextField = new BFTextField(new Rectangle(10, 170, 362, 20));
+		this.apellidoTextField = new BFTextField(new Rectangle(10, 170, 362, 20));
 		add(apellidoTextField);
-		BFTextField fechaNacimientoTextField = new BFTextField(new Rectangle(10, 250, 362, 20), "Fecha");
+		this.fechaNacimientoTextField = new BFTextField(new Rectangle(10, 250, 362, 20), "Fecha");
 		add(fechaNacimientoTextField);
-		BFTextField dptoResidenciaTextField = new BFTextField(new Rectangle(10, 330, 362, 20));
+		this.dptoResidenciaTextField = new BFTextField(new Rectangle(10, 330, 362, 20));
 		add(dptoResidenciaTextField);
 		
-		
-		BFSpinner cantidadHijosSpinner = new BFSpinner(new Rectangle(167, 407, 54, 31));
+		//	Spinners aquí
+		this.cantidadHijosSpinner = new BFSpinner(new Rectangle(167, 407, 54, 31));
 		getContentPane().add(cantidadHijosSpinner);		
-		BFSpinner idSpinner = new BFSpinner(new Rectangle(167, 485, 54, 28));
+		this.idSpinner = new BFSpinner(new Rectangle(167, 485, 54, 28));
 		getContentPane().add(idSpinner);
 	
-		
-		
 		//	Boton para agregar vehiculo
-		JButton crearVehiculo = new JButton("Agregar Vehiculo");
-		crearVehiculo.setForeground(Color.WHITE);
-		crearVehiculo.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		crearVehiculo.setBackground(new Color(143, 188, 143));
-		crearVehiculo.setBorderPainted(false);
+		BFButton crearVehiculo = new BFButton("Agregar Vehiculo", new Rectangle(470, 371, 233, 30));
+		getContentPane().add(crearVehiculo);
 		crearVehiculo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -115,8 +110,7 @@ public class InterfazPersona extends BFInterfaz {
 				vehiculos.setVisible(true);
 			}
 		});
-		crearVehiculo.setBounds(470, 371, 233, 30);
-		getContentPane().add(crearVehiculo);		
+				
 
 		//	Lista de vehiculos
 		/*	La lista de vehiculos es parte de la propia clase IntergazPersonas
@@ -146,7 +140,8 @@ public class InterfazPersona extends BFInterfaz {
 				else if (fechaNacimientoTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Fecha de nacimiento");}
 				else if (!ValidarIngresos.ValidarFecha("Fecha Nacimiento", fechaNacimientoTextField.getText())) {return;} 
 				else {
-					handler.crearPersona((byte) ((int) idSpinner.getValue()), nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), dptoResidenciaTextField.getText());
+					idPersona = (int) idSpinner.getValue();
+					handler.crearPersona(idPersona, nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), dptoResidenciaTextField.getText());
 					idSpinner.setValue(0);
 					nombreTextField.setText("");
 					apellidoTextField.setText("");
@@ -191,12 +186,24 @@ public class InterfazPersona extends BFInterfaz {
 		this.vehiculosList.removeAll();
 		for (Vehiculo v : handler.listaDeVehiculos) {	//	Por cada vehiculo que comprata la id de la persona
 			if (v.getIdDueño() == idPersona) {
-				System.out.println(v.getIdDueño() + " " + idPersona);
 				this.vehiculosList.add(v.toString());
 			}
 		}
 	}
 	public void actualizarIdPersona(int i) {
 		this.idPersona = i;
+	}
+	
+	//	Funcion para poder cargar las poersonas
+	public void cargarPersona(Persona p) {
+		actualizarIdPersona(p.getIdPersona());
+		this.idSpinner.setValue(idPersona);
+		this.nombreTextField.setText(p.getNombre());
+		this.apellidoTextField.setText(p.getApellido());
+		this.fechaNacimientoTextField.setText(p.getFechaNacimiento().toString());
+		this.dptoResidenciaTextField.setText(p.getDptoResidencia());;
+		cantidadHijosSpinner.setValue((int)p.getCantHijos());
+		actualizarListaVehiculos();
+		JOptionPane.showMessageDialog(null,"¡Datos cargados!");
 	}
 }
