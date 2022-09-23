@@ -27,6 +27,11 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.List;
 import java.awt.Rectangle;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
+import javax.swing.JComboBox;
 
 public class InterfazPersona extends BFInterfaz {
 	public InterfazPrincipal parent;
@@ -84,21 +89,28 @@ public class InterfazPersona extends BFInterfaz {
 		
 		//	Todo lo que son textFields van aquí
 		BFTextField nombreTextField = new BFTextField(new Rectangle(10, 90, 362, 20));
-		add(nombreTextField);
+		getContentPane().add(nombreTextField);
 		BFTextField apellidoTextField = new BFTextField(new Rectangle(10, 170, 362, 20));
-		add(apellidoTextField);
+		getContentPane().add(apellidoTextField);
 		BFTextField fechaNacimientoTextField = new BFTextField(new Rectangle(10, 250, 362, 20), "Fecha");
-		add(fechaNacimientoTextField);
-		BFTextField dptoResidenciaTextField = new BFTextField(new Rectangle(10, 330, 362, 20));
-		add(dptoResidenciaTextField);
+		getContentPane().add(fechaNacimientoTextField);
+		//BFTextField dptoResidenciaTextField = new BFTextField(new Rectangle(10, 330, 362, 20));
+		//add(dptoResidenciaTextField);
 		
 		
 		BFSpinner cantidadHijosSpinner = new BFSpinner(new Rectangle(167, 407, 54, 31));
 		getContentPane().add(cantidadHijosSpinner);		
 		BFSpinner idSpinner = new BFSpinner(new Rectangle(167, 485, 54, 28));
 		getContentPane().add(idSpinner);
-	
+
+		//ComboBox para seleccionar departamento de residencia @Matías, sustituí el TextField
+		String deptos[] = {"Artigas","Canelones","Cerro Largo","Colonia","Durazno","Flores","Florida","Lavalleja","Maldonado","Montevideo","Paysandú","Río Negro","Rivera","Rocha","Salto","San José","Soriano","Tacuarembó","Treinta y Tres"};
+		JComboBox deptoResidenciaComboBox = new JComboBox(deptos);
+		deptoResidenciaComboBox.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		deptoResidenciaComboBox.setBounds(10, 332, 362, 22);
 		
+		getContentPane().add(deptoResidenciaComboBox);
+
 		
 		//	Boton para agregar vehiculo
 		JButton crearVehiculo = new JButton("Agregar Vehiculo");
@@ -142,15 +154,17 @@ public class InterfazPersona extends BFInterfaz {
 				}
 				else if (nombreTextField.getText().strip() == "" ) {Msg.MostrarError("Campo sin valor");}
 				else if (apellidoTextField.getText().strip() == "" ) {Msg.MostrarError("Campo vacio: Apellido");}
-				else if (dptoResidenciaTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Departamento de residencia");}
+				//Mantuve esto por si era necesario en un futuro, pero es claro que nunca va a ser vacío. @Matías
+				else if (deptoResidenciaComboBox.getSelectedItem().toString().strip() == "") {Msg.MostrarError("Campo vacio: Departamento de residencia");}
 				else if (fechaNacimientoTextField.getText().strip() == "") {Msg.MostrarError("Campo vacio: Fecha de nacimiento");}
 				else if (!ValidarIngresos.ValidarFecha("Fecha Nacimiento", fechaNacimientoTextField.getText())) {return;} 
 				else {
-					handler.crearPersona((byte) ((int) idSpinner.getValue()), nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), dptoResidenciaTextField.getText());
+					//@Matías, cambié el TextField por el ComboBox
+					handler.crearPersona((byte) ((int) idSpinner.getValue()), nombreTextField.getText(), apellidoTextField.getText(),LocalDate.parse(fechaNacimientoTextField.getText()),(byte) ((int) cantidadHijosSpinner.getValue()), deptoResidenciaComboBox.getSelectedItem().toString());
 					idSpinner.setValue(0);
 					nombreTextField.setText("");
 					apellidoTextField.setText("");
-					dptoResidenciaTextField.setText("");
+					//dptoResidenciaTextField.setText(""); @Matías, supongo que lo dejo con el valor por defecto
 					fechaNacimientoTextField.setText("");
 					cantidadHijosSpinner.setValue(0);
 					vehiculosList.removeAll();
@@ -160,7 +174,7 @@ public class InterfazPersona extends BFInterfaz {
 				parent.getListaDeAltaList().actualizarListaDeAlta();
 			}
 		});
-		add(saveButton);
+		getContentPane().add(saveButton);
 		
 		
 		//	Boton para cargar la persona
@@ -177,15 +191,17 @@ public class InterfazPersona extends BFInterfaz {
 					nombreTextField.setText(p.getNombre());
 					apellidoTextField.setText(p.getApellido());
 					fechaNacimientoTextField.setText(p.getFechaNacimiento().toString());
-					dptoResidenciaTextField.setText(p.getDptoResidencia());
+					//dptoResidenciaTextField.setText(p.getDptoResidencia()); @Matías, no supe como hacer para setear el valor que viene de p
+					
 					cantidadHijosSpinner.setValue((int) p.getCantHijos());
 					actualizarListaVehiculos();
 					JOptionPane.showMessageDialog(null,"¡Datos cargados!");
 				}
 			}
 		});
-		add(loadButton);
+		getContentPane().add(loadButton);
 		
+				
 	}	
 	public void actualizarListaVehiculos() {
 		this.vehiculosList.removeAll();
