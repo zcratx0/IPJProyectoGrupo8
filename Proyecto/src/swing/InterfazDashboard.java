@@ -60,18 +60,5 @@ public class InterfazDashboard extends JFrame {
 		numeroPromedioJLabel.setBounds(338, 133, 105, 33);
 		panelJpanel.add(numeroPromedioJLabel);
 		
-		JButton botonGraficarBtn = new JButton("Graficar vehículos por depto.");
-		botonGraficarBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-			}
-		});
-		botonGraficarBtn.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		botonGraficarBtn.setBounds(150, 228, 262, 40);
-		panelJpanel.add(botonGraficarBtn);
-		
 	}
 }
