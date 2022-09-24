@@ -50,6 +50,7 @@ public class InterfazDashboard extends BFInterfaz {
 	public ListaPersonaHandler handler;	//	Llamado para acceder a la memoria
 	public List vehiculosList; // Lista de vehiculos
 	public int idPersona;
+	public BFLabel numeroPersonasJLabel, numeroPromedioJLabel;
 	public GraficoTarta dashboard;
     private JPanel contentPane;
     private boolean bandera=false;
@@ -72,14 +73,14 @@ public class InterfazDashboard extends BFInterfaz {
 		BFLabel cantidadDePersonasJLabel = new BFLabel("Cantidad de personas ingresadas : ", new Rectangle(10, 78, 290, 33));
 		getContentPane().add(cantidadDePersonasJLabel);
 
-		BFLabel numeroPersonasJLabel = new BFLabel("0", new Rectangle(338, 77, 105, 33));
+		numeroPersonasJLabel = new BFLabel("0", new Rectangle(338, 77, 105, 33));
 		getContentPane().add(numeroPersonasJLabel);
 		
 		BFLabel promedioDeVehiculosJLabel = new BFLabel("Promedio de vehículos por persona : ", new Rectangle(10, 134, 318, 33));
 		promedioDeVehiculosJLabel.setLocation(407, 78);
 		getContentPane().add(promedioDeVehiculosJLabel);
 		
-		BFLabel numeroPromedioJLabel = new BFLabel("0", new Rectangle(338, 133, 105, 33));
+		numeroPromedioJLabel = new BFLabel("0", new Rectangle(338, 133, 105, 33));
 		numeroPromedioJLabel.setLocation(735, 77);
 		getContentPane().add(numeroPromedioJLabel);
 		
@@ -93,7 +94,16 @@ public class InterfazDashboard extends BFInterfaz {
 	}
 	
 	public void actualizarDashboard() {
+		int totalVehiculo = 0;
+		for (Persona p : handler.listaDePersonas) {
+			totalVehiculo += p.getVehiculo().size();
+		}
+		if (totalVehiculo != 0 && handler.listaDePersonas.size() != 0) {
+			double promedio = totalVehiculo/handler.listaDePersonas.size();
+			numeroPromedioJLabel.setText(promedio+ "");
+		}
 		dashboard.repaint();
+		numeroPersonasJLabel.setText(handler.listaDePersonas.size() + "");
 	}
 	
 }

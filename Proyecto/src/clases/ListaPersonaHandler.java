@@ -94,7 +94,12 @@ public class ListaPersonaHandler {
 		if (this.buscadIDVehiculo(v.getIdVehiculo()) <= -1) {
 			this.listaDeVehiculos.add(v);
 			return true;
-		} return false;
+		} else {
+			//	Si existe, lo actualizo
+			this.listaDeVehiculos.set(this.buscadIDVehiculo(v.getIdVehiculo()), v);
+		}
+		
+		return false;
 	}
 	public void actualizarVehiculos() {
 		for (Persona p : this.listaDePersonas) {

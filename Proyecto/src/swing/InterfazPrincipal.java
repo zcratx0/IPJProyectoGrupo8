@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import clases.ExportExcel;
 import clases.ListaPersonaHandler;
 import clases.Persona;
+import componentes.BFAppBar;
 import componentes.BFButton;
 import componentes.BFInterfaz;
 import componentes.BFLabel;

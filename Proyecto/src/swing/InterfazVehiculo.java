@@ -176,9 +176,11 @@ public class InterfazVehiculo extends BFInterfaz {
 					if(tipoComboBox.getSelectedItem()=="Barco") {
 						Barco barco = new Barco((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Double.parseDouble(esloraTextField.getText()) ,(double) Double.parseDouble(mangaTextField.getText()), (int) idPersonaSpinner.getValue());
 						if (handler.crearVehiculos(barco)) {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos guardados!");}
+						else {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos sobreescritos!");}
 					} if (tipoComboBox.getSelectedItem() == "Avión") {
 						Avion avion = new Avion((int) idSpinner.getValue(), nombreTextField.getText(), colorTextField.getText(), (double) Double.parseDouble(longitudTextField.getText()), Integer.parseInt(cantPasajerosTextField.getText()), (int) idPersonaSpinner.getValue());
 						if (handler.crearVehiculos(avion)) {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos guardados!");}
+						else {/* Mostrar mensaje de que se creo */ JOptionPane.showMessageDialog(null,"¡Datos sobreescritos!");}
 					}
 					handler.actualizarVehiculos();
 					parent.actualizarListaVehiculos();

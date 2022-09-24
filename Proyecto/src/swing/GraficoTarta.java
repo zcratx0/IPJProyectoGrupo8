@@ -39,7 +39,8 @@ public class GraficoTarta extends JPanel {
     
     public List departamentos = Arrays.asList(deptos);;
     
-    public int colores[] = {1,234,26,221,39,208,52,195,65,182,78,169,91,156,104,117,143,247,130};
+    public String colores[] = {"330000","FF0000","FFCCCC","FF8000","FFFF00","336600","33FF33","006666","33FFFF","000066","6600CC","CC00CC","FF99FF"
+    		,"000000","660033","330019","606060","E0E0E0","99CCFF"};
     
 	/**
 	 * Crea el frame.
@@ -82,8 +83,8 @@ public class GraficoTarta extends JPanel {
     }
     
     public void drawDpt(Graphics g, int i, int grados, int gradoFinal, int altura, int cantidad) {
-    	g.setColor(new Color(colores[i]));
-    	System.out.println(new Color(colores[i]));
+    	Color c = Color.decode("0x"+colores[i]);
+    	g.setColor(c);
         g.fillArc(50,150,200,200,grados, gradoFinal);
         g.fillRect(370,altura,20,20);
         g.drawString(deptos[i]+ " " + cantidad , 400, altura); 
