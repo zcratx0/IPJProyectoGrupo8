@@ -1,5 +1,9 @@
 package swing;
 
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,6 +17,7 @@ import componentes.BFInterfaz;
 import componentes.BFLabel;
 import componentes.BFSpinner;
 import componentes.BFTextField;
+
 import validadores.Msg;
 import validadores.ValidarIngresos;
 
@@ -46,6 +51,9 @@ public class InterfazDashboard extends BFInterfaz {
 	public List vehiculosList; // Lista de vehiculos
 	public int idPersona;
 	
+    private JPanel contentPane;
+    private boolean bandera=false;
+	
 	public InterfazDashboard(ListaPersonaHandler handler, InterfazPrincipal parent) {
 		super("Dashboard");
 		this.handler = handler;
@@ -75,10 +83,23 @@ public class InterfazDashboard extends BFInterfaz {
 		numeroPromedioJLabel.setLocation(735, 77);
 		getContentPane().add(numeroPromedioJLabel);
 		
-		BFLabel vehiculosPorDeptoJLabel = new BFLabel("Vehículos ingresados por departamento", new Rectangle(227, 123, 372, 33));
+		BFLabel vehiculosPorDeptoJLabel = new BFLabel("Gráfico vehículos por departamento", new Rectangle(227, 123, 339, 33));
 		vehiculosPorDeptoJLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
 		getContentPane().add(vehiculosPorDeptoJLabel);
 		
+		JButton botonGraficarButton = new JButton("Graficar");
+		botonGraficarButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		botonGraficarButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				GraficoTarta frame = new GraficoTarta();
+				frame.setVisible(true);
+				
+			}
+		});
+		botonGraficarButton.setBounds(306, 192, 169, 33);
+		getContentPane().add(botonGraficarButton);
 		
+
 	}
 }
