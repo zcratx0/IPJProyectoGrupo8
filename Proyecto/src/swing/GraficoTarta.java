@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import clases.ExportExcel;
 import clases.ListaPersonaHandler;
 import clases.Persona;
 import clases.Vehiculo;
@@ -42,7 +43,7 @@ public class GraficoTarta extends JPanel {
     		"Colonia","Durazno","Flores","Florida","Lavalleja","Maldonado",
     		"Montevideo","Paysandú","Río Negro","Rivera","Rocha","Salto","San José","Soriano","Tacuarembó","Treinta y Tres"};
     
-    public List departamentos = Arrays.asList(deptos);;
+    public List departamentos = Arrays.asList(deptos);
     
     public String colores[] = {"330000","FF0000","FFCCCC","FF8000","FFFF00","336600","33FF33","006666","33FFFF","000066","6600CC","CC00CC","FF99FF"
     		,"000000","660033","330019","606060","E0E0E0","99CCFF"};
@@ -84,7 +85,7 @@ public class GraficoTarta extends JPanel {
         			
         		}
         	}
-            
+            ExportExcel.createCSV(vehiculosPorDepartamento, departamentos);
     }
     
     public void drawDpt(Graphics g, int i, int grados, int gradoFinal, int altura, int cantidad) {

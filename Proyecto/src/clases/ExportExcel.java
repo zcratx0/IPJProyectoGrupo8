@@ -3,6 +3,7 @@ package clases;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class ExportExcel {
 	
@@ -26,7 +27,18 @@ public class ExportExcel {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+	public static void createCSV(int[] vehiculosPorDepartamento, List departamentos) {
+		try {
+			FileWriter obj = new FileWriter("VehiculosPorDepartamento.csv");
+			obj.write("Departamento, Cantidad de Vehiculos");
+			for (int i = 0; i< vehiculosPorDepartamento.length; i++) {
+				obj.write("\n"+departamentos.get(i)+","+vehiculosPorDepartamento[i]);
+			}				
+			obj.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	
 	
 	
