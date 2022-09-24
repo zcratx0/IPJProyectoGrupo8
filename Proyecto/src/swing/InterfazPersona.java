@@ -167,6 +167,7 @@ public class InterfazPersona extends BFInterfaz {
 					JOptionPane.showMessageDialog(null,"¡Datos guardados!");
 				}
 				parent.getListaDePersonasList().actualizarLista();
+				parent.getDashboard().actualizarDashboard();
 				parent.getListaDeAltaList().actualizarListaDeAlta();
 			}
 		});

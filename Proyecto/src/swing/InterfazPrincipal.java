@@ -37,14 +37,18 @@ public class InterfazPrincipal extends BFInterfaz{
 	private BFList listaDeAltaList;
 	public ListaPersonaHandler handler;
 	private boolean Debug;
+	private InterfazDashboard dashboard;
 	
 	
+
+
 	public InterfazPrincipal(ListaPersonaHandler handler) {
 		super("Gestion de personas");
 		String textDarDeAlta = "Dar de alta";
 		String textDarDeBaja = "Dar de baja";
 				
 		this.handler = handler;
+		this.dashboard = new InterfazDashboard(handler, InterfazPrincipal.this);
 		
 		
 		//	Lista de personas 
@@ -176,7 +180,7 @@ public class InterfazPrincipal extends BFInterfaz{
 		mnitemDashboard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new InterfazDashboard(handler, InterfazPrincipal.this).setVisible(true);;
+				dashboard.setVisible(true);;
 			}
 		});
 		
@@ -238,5 +242,13 @@ public class InterfazPrincipal extends BFInterfaz{
 	public void setListaDeAltaList(BFList listaDeAltaList) {
 		this.listaDeAltaList = listaDeAltaList;
 	}
-	
+
+	public InterfazDashboard getDashboard() {
+		return dashboard;
+	}
+	public void setDashboard(InterfazDashboard dashboard) {
+		this.dashboard = dashboard;
+	}
+
+
 }

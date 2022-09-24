@@ -50,7 +50,7 @@ public class InterfazDashboard extends BFInterfaz {
 	public ListaPersonaHandler handler;	//	Llamado para acceder a la memoria
 	public List vehiculosList; // Lista de vehiculos
 	public int idPersona;
-	
+	public GraficoTarta dashboard;
     private JPanel contentPane;
     private boolean bandera=false;
 	
@@ -87,9 +87,13 @@ public class InterfazDashboard extends BFInterfaz {
 		vehiculosPorDeptoJLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
 		getContentPane().add(vehiculosPorDeptoJLabel);
 		
-		GraficoTarta gT = new GraficoTarta(handler);
-		getContentPane().add(gT);
-		
-
+		dashboard = new GraficoTarta(handler);
+		getContentPane().add(dashboard);
+	
 	}
+	
+	public void actualizarDashboard() {
+		dashboard.repaint();
+	}
+	
 }

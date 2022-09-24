@@ -46,7 +46,7 @@ public class GraficoTarta extends JPanel {
 	 */
     public GraficoTarta(ListaPersonaHandler handler) {
     	this.handler = handler;
-        setBounds(100, 100, 800, 600);
+        setBounds(100, 200, 800, 600);
         setBackground(Color.white);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -73,7 +73,7 @@ public class GraficoTarta extends JPanel {
         		for (int i = 0; i < vehiculosPorDepartamento.length; i++) {
         			if (vehiculosPorDepartamento[i] <= 0) continue;	//	Ignorar si no hay vehiculo
         			int grados = vehiculosPorDepartamento[i] * 360/bufferVehiculos;
-        			drawDpt(g, i, gradosBuffer, grados , altura+=30);
+        			drawDpt(g, i, gradosBuffer, grados , altura+=30, vehiculosPorDepartamento[i]);
         			gradosBuffer += grados;
         			
         		}
@@ -81,12 +81,12 @@ public class GraficoTarta extends JPanel {
             
     }
     
-    public void drawDpt(Graphics g, int i, int grados, int gradoFinal, int altura) {
+    public void drawDpt(Graphics g, int i, int grados, int gradoFinal, int altura, int cantidad) {
     	g.setColor(new Color(colores[i]));
     	System.out.println(new Color(colores[i]));
-        g.fillArc(50,250,200,200,grados, gradoFinal);
+        g.fillArc(50,150,200,200,grados, gradoFinal);
         g.fillRect(370,altura,20,20);
-        g.drawString(deptos[i], 400, altura); 
+        g.drawString(deptos[i]+ " " + cantidad , 400, altura); 
     }
     
         
