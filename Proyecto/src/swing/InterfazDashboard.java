@@ -90,7 +90,6 @@ public class InterfazDashboard extends BFInterfaz {
 		
 		dashboard = new GraficoTarta(handler);
 		getContentPane().add(dashboard);
-	
 	}
 	
 	public void actualizarDashboard() {

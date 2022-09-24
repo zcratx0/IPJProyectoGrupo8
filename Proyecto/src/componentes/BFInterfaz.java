@@ -25,7 +25,6 @@ public class BFInterfaz extends JFrame {
 		Component appBar = new BFAppBar(getTitle());
 		appBar.setLocation(0, 0);
 		getContentPane().add(appBar);
-		System.out.println("Intefaz " + getTitle() + " creada!");
 		
 	}
 

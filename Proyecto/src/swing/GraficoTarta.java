@@ -3,6 +3,7 @@ package swing;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,8 +15,12 @@ import clases.Vehiculo;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -89,6 +94,5 @@ public class GraficoTarta extends JPanel {
         g.fillRect(370,altura,20,20);
         g.drawString(deptos[i]+ " " + cantidad , 400, altura); 
     }
-    
         
 }
