@@ -87,18 +87,8 @@ public class InterfazDashboard extends BFInterfaz {
 		vehiculosPorDeptoJLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
 		getContentPane().add(vehiculosPorDeptoJLabel);
 		
-		JButton botonGraficarButton = new JButton("Graficar");
-		botonGraficarButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		botonGraficarButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				GraficoTarta frame = new GraficoTarta();
-				frame.setVisible(true);
-				
-			}
-		});
-		botonGraficarButton.setBounds(306, 192, 169, 33);
-		getContentPane().add(botonGraficarButton);
+		GraficoTarta gT = new GraficoTarta(handler);
+		getContentPane().add(gT);
 		
 
 	}

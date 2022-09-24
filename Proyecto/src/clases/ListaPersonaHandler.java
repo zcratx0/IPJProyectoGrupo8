@@ -65,7 +65,6 @@ public class ListaPersonaHandler {
 			}
 		} return -1;
 	}
-	
 
 	public boolean darPersonaDeAlta(Persona p) {
 		if (dadoDeAlta.contains(p)) {
@@ -97,11 +96,6 @@ public class ListaPersonaHandler {
 			return true;
 		} return false;
 	}
-	
-	
-	
-	
-	
 	public void actualizarVehiculos() {
 		for (Persona p : this.listaDePersonas) {
 			LinkedList<Vehiculo> bufferVehiculo = new LinkedList<>();
